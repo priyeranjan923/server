@@ -1,3 +1,5 @@
+
+const path = require ("path")
 const express = require("express");
 const app = express();
 
@@ -37,7 +39,7 @@ app.use(
 )
 //cloudinary connection
 cloudinaryConnect();
-
+app.use(express.static(path.join(__dirname,'./build')));
 //routes
 app.use("/api/v1/auth", userRoutes);
 app.use("/api/v1/profile", profileRoutes);
@@ -54,6 +56,14 @@ app.get("/", (req, res) => {
 	});
 });
 
+app.get("/*", function (req, res) {
+	res.sendFile(path.join(__dirname, "./build/index.html"), function (err) {
+	  if (err) {
+		res.status(500).send(err);
+	  }
+	});
+  });
+  
 app.listen(PORT, () => {
 	console.log(`App is running at ${PORT}`)
 })
